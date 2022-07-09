@@ -1,13 +1,15 @@
 from flask_sqlalchemy import SQLAlchemy
 
+
 db = SQLAlchemy()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    first_name = db.Column(db.String(80), nullable=False)
+    email = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
-    is_active = db.Column(db.Boolean(), unique=False, nullable=False)
-    character_favorite = db.relationship('CharacterFavorite', lazy=True)
+    is_active = db.Column(db.Boolean(), unique=False, nullable=True, default=True)
+    # character_favorite = db.relationship('CharacterFavorite', lazy=True)
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -16,7 +18,7 @@ class User(db.Model):
         return {
             "id": self.id,
             "email": self.email,
-            "CharacterFavorite": list(map(lambda x: x.serialize(), self.character_favorite))
+            "first_name": self.first_name,
         }
             # do not serialize the password, its a security breach
         
@@ -25,6 +27,7 @@ class Character(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
     birth_year = db.Column(db.String(80), nullable=False)
+    character_favorite = db.relationship('CharacterFavorite', lazy=True)
   
     def __repr__(self):
         return '<Character %r>' % self.username
@@ -58,6 +61,7 @@ class Planet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
     climate = db.Column(db.String(80), nullable=False)
+    planet_favorite = db.relationship('PlanetFavorite', lazy=True)
   
     def __repr__(self):
         return '<Planet %r>' % self.username
@@ -83,7 +87,6 @@ class PlanetFavorite(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "planet.id": self.character_id,
-         
+            "planet.id": self.planet_id, 
             # do not serialize the password, its a security breach
         }
