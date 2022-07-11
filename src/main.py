@@ -80,6 +80,14 @@ def delete_user(user_id):
     db.session.commit()
     return jsonify(request_body_user), 200
 
+@app.route('/character/<int:character_id>', methods=['GET'])
+def get_character(character_id):
+
+        request_body_character = request.get_json()
+        character1 = Character.query.get(character_id)
+        return jsonify(character1.serialize()), 200
+
+
 @app.route('/character', methods=['GET'])
 def get_characters():
 
@@ -87,6 +95,7 @@ def get_characters():
     all_characters = list(map(lambda x: x.serialize(), characters))
 
     return jsonify(all_characters), 200
+
 
 @app.route('/character', methods=['POST'])
 def add_character():
@@ -118,6 +127,13 @@ def get_planets():
     all_planets = list(map(lambda x: x.serialize(), planets))
 
     return jsonify(all_planets), 200
+
+@app.route('/planet/<int:planet_id>', methods=['GET'])
+def get_planet(planet_id):
+
+    request_body_planet = request.get_json()
+    planet1 = Planet.query.get(planet_id)
+    return jsonify(planet1.serialize()), 200
 
 @app.route('/planet', methods=['POST'])
 def add_planet():
